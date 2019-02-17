@@ -2,6 +2,9 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/semantic.min.css')
+    block header
   body
     block content
+    script(src='/javascripts/semantic.min.js')  
+    block footer

@@ -1,5 +1,40 @@
 extends layout
 
+block header 
+  link(rel='stylesheet', href='/stylesheets/vis-network.min.css')
+  link(rel='stylesheet', href='/stylesheets/style.css')
+
 block content
-  h1= title
-  p Welcome to #{title}
+  div(class="ui container segment equal height grid stackable equal width")
+    div(class="row")
+      div(class="column")
+        div(class="ui segment", id="graph")
+          
+      div(class="column")
+        form(class="ui form segment")
+          div(class="field")
+            label Node Name
+            input(name="name")
+          div(class="field")
+            label Description
+            textarea(name="description")
+          div(class="field")
+            label Example
+            textarea(name="example")  
+          button(class="ui button primary" type="button") Save Node
+          button(class="ui button red" type="button") Delete Node
+
+
+        form(class="ui form segment")
+          div(class="field")
+            label Relationship Name
+            input(name="name")             
+          button(class="ui button secondary" type="button") Save Edge 
+          button(class="ui button red" type="button") Delete Edge 
+  
+  block footer
+    script(src='/javascripts/vis-network.min.js')
+    script(src='/javascripts/jquery-3.3.1.min.js')
+    script(src='/javascripts/lodash.min.js')
+    script(src='/javascripts/admin.js')
+    
