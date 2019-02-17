@@ -18,13 +18,38 @@ $("#savenode").on("click", function () {
     clearNodeForm();
 });
 
+$("#saveedge").on("click", function () {
+    if ($("input:hidden[name=uuid]", "#edge").val()) {
+        $.post("/admin/updateedge", $("#edge").serialize(), function (data) {
+            populateGraph();
+        });
+    } else {
+        $.post("/admin/addedge", $("#edge").serialize(), function (data) {
+            addEdge(data);
+        });
+    }
+
+    clearEdgeForm();
+});
+
 $("#newnode").on("click", function () {
     clearNodeForm();
 });
 
+$("#newedge").on("click", function () {
+    clearEdgeForm();
+});
+
+
+
 function clearNodeForm() {
     $("#node").trigger('reset');
     $("#node input[type=hidden]").val('');
+}
+
+function clearEdgeForm() {
+    $("#edge").trigger('reset');
+    $("#edge input[type=hidden]").val('');
 }
 
 function populateGraph() {
@@ -38,6 +63,11 @@ function addNode(data) {
     nodes.add(data.nodes[0]);
 }
 
+function addEdge(data) {
+    preProcessNodeData(data);
+    edges.add(data.edges[0]);
+}
+
 function populateFullGraph(data) {
     preProcessNodeData(data);
     nodesArray = data.nodes;
@@ -49,14 +79,25 @@ function populateFullGraph(data) {
 }
 
 function preProcessNodeData(data) {
-    if (data == null || data.nodes == null) {
+    if (data == null) {
         return;
     }
-    for (let node of data.nodes) {
-        let label = node.name;
-        node.name = node.label;
-        node.label = label;
-        node.id = node.uuid;
+    if (null != data.nodes) {
+        for (let node of data.nodes) {
+            let label = node.name;
+            node.name = node.label;
+            node.label = label;
+            node.id = node.uuid;
+        }
+    }
+    if (null != data.edges) {
+        for (let edge of data.edges) {
+            let label = edge.name;
+            edge.name = edge.label;
+            edge.label = label;
+            edge.id = edge.uuid;
+            edge.font = { align: 'horizontal' };
+        }
     }
 }
 
@@ -73,8 +114,7 @@ function createGraph() {
         edges: edges
     };
     let options = {
-        selectable: true,
-        multiselect: true,
+
     };
     network = new vis.Network(container, data, options);
     network.setOptions({
@@ -89,20 +129,27 @@ function createGraph() {
         },
         interaction: {
             selectable: true,
-            multiselect: true,
+            multiselect: false,
+            selectConnectedEdges: false,
         },
     });
     network.on("click", function (params) {
-        let currentUUID = this.getNodeAt(params.pointer.DOM);
-        if(null == fromNodeUUID && null == toNodeUUID){
-            fromNodeUUID = currentUUID;
-        }else if(null != fromNodeUUID && null == toNodeUUID){
-            toNodeUUID = currentUUID;            
-        }else{
-            fromNodeUUID = toNodeUUID;
-            toNodeUUID = currentUUID;
+        if (this.getSelectedNodes()) {
+            let currentNodeUUID = this.getSelectedNodes()[0];
+            if (null == fromNodeUUID && null == toNodeUUID) {
+                fromNodeUUID = currentNodeUUID;
+            } else if (null != fromNodeUUID && null == toNodeUUID) {
+                toNodeUUID = currentNodeUUID;
+            } else {
+                fromNodeUUID = toNodeUUID;
+                toNodeUUID = currentNodeUUID;
+            }
+            populateNodeForm(currentNodeUUID);
         }
-        populateNodeForm(currentUUID);
+        if (this.getSelectedEdges()) {
+            let currentEdgeUUID = this.getSelectedEdges()[0];
+            populateEdgeForm(currentEdgeUUID);
+        }
     });
 }
 
@@ -114,19 +161,31 @@ function populateNodeForm(uuid) {
         $("#node textarea[name=example]").val(node.example);
         $("#node select[name=active]").val(node.active);
         $("#node input[name=uuid]").val(node.uuid);
-        if(uuid == fromNodeUUID){
+        if (uuid == fromNodeUUID) {
             $("#edge input[name=fromname]").val(node.name);
             $("#edge input[name=fromuuid]").val(node.uuid);
         }
-        if(uuid == toNodeUUID){
-            if($("#edge input[name=touuid]").val()){
+        if (uuid == toNodeUUID) {
+            if ($("#edge input[name=touuid]").val()) {
                 $("#edge input[name=fromname]").val($("#edge input[name=toname]").val());
                 $("#edge input[name=fromuuid]").val($("#edge input[name=touuid]").val());
             }
-
             $("#edge input[name=toname]").val(node.name);
             $("#edge input[name=touuid]").val(node.uuid);
+            //Cleanup
+            $("#edge input[name=name]").val(null);
+            $("#edge input[name=uuid]").val(null);            
         }
+    });
+}
+
+function populateEdgeForm(uuid) {
+    $.post("/admin/getedgedata", { uuid: uuid }, function (data) {
+        let edge = data.edges[0];
+        clearNodeForm();
+        clearEdgeForm();
+        $("#edge input[name=name]").val(edge.name);
+        $("#edge input[name=uuid]").val(edge.uuid);
     });
 }
 

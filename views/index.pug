@@ -29,7 +29,7 @@ block content
           input(type="hidden" name="uuid")    
           button(class="ui button primary" type="button" id="savenode") Save Node
           button(class="ui button red" type="button") Delete Node
-          button(class="ui button red" type="button" id="newnode") New Node
+          button(class="ui button secondary" type="button" id="newnode") New Node
 
 
         form(class="ui form segment" , id="edge") 
@@ -44,8 +44,10 @@ block content
             input(name="name")            
           input(type="hidden" name="fromuuid")
           input(type="hidden" name="touuid")   
-          button(class="ui button secondary" type="button") Save Edge 
+          input(type="hidden" name="uuid")    
+          button(class="ui button primary" type="button" id="saveedge") Save Edge 
           button(class="ui button red" type="button") Delete Edge 
+          button(class="ui button secondary" type="button" id="newedge") New Edge
   
   block footer
     script(src='/javascripts/vis-network.min.js')
