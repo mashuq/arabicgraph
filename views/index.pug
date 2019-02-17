@@ -11,7 +11,7 @@ block content
         div(class="ui segment", id="graph")
           
       div(class="column")
-        form(class="ui form segment")
+        form(class="ui form segment", id="node")
           div(class="field")
             label Node Name
             input(name="name")
@@ -20,15 +20,30 @@ block content
             textarea(name="description")
           div(class="field")
             label Example
-            textarea(name="example")  
-          button(class="ui button primary" type="button") Save Node
+            textarea(name="example")
+          div(class="field")
+            label Active
+            select(name="active")
+              option(value="true") True
+              option(value="false") False
+          input(type="hidden" name="uuid")    
+          button(class="ui button primary" type="button" id="savenode") Save Node
           button(class="ui button red" type="button") Delete Node
+          button(class="ui button red" type="button" id="newnode") New Node
 
 
-        form(class="ui form segment")
+        form(class="ui form segment" , id="edge") 
+          div(class="field")
+            label From Node
+            input(name="fromname")      
+          div(class="field")
+            label To Node
+            input(name="toname")    
           div(class="field")
             label Relationship Name
-            input(name="name")             
+            input(name="name")            
+          input(type="hidden" name="fromuuid")
+          input(type="hidden" name="touuid")   
           button(class="ui button secondary" type="button") Save Edge 
           button(class="ui button red" type="button") Delete Edge 
   
