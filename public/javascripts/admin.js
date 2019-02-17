@@ -5,9 +5,21 @@ $(function () {
     populateGraph();
 });
 
+$("#deletenode").on("click", function () {
+    if ($("input:hidden", "#node").val()) {
+        let result = confirm("Are you sure?");
+        if (result) {
+            $.post("/admin/deletenode", $("#node").serialize(), function (data) {
+                populateGraph();
+            });
+        }
+    }
+    clearNodeForm();
+});
+
 $("#savenode").on("click", function () {
     if ($("input:hidden", "#node").val()) {
-        $.post("/admin/updateNode", $("#node").serialize(), function (data) {
+        $.post("/admin/updatenode", $("#node").serialize(), function (data) {
             populateGraph();
         });
     } else {
@@ -28,7 +40,18 @@ $("#saveedge").on("click", function () {
             addEdge(data);
         });
     }
+    clearEdgeForm();
+});
 
+$("#deleteedge").on("click", function () {
+    if ($("input:hidden[name=uuid]", "#edge").val()) {
+        let result = confirm("Are you sure?");
+        if (result) {
+            $.post("/admin/deleteedge", $("#edge").serialize(), function (data) {
+                populateGraph();
+            });
+        }
+    }
     clearEdgeForm();
 });
 
@@ -174,7 +197,7 @@ function populateNodeForm(uuid) {
             $("#edge input[name=touuid]").val(node.uuid);
             //Cleanup
             $("#edge input[name=name]").val(null);
-            $("#edge input[name=uuid]").val(null);            
+            $("#edge input[name=uuid]").val(null);
         }
     });
 }

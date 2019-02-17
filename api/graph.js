@@ -55,7 +55,7 @@ let addNode = function (params) {
 let addEdge = function (params) {
     params.uuid = uuidv4();
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = `Match (from:Node {uuid : $fromuuid}), (to:Node {uuid : $touuid}) CREATE (from)-[relation:${params.name}{ uuid:$uuid, name:$name }]->(to) RETURN relation`;
+        let cypher = `Match (from:Node {uuid : $fromuuid}), (to:Node {uuid : $touuid}) CREATE (from)-[relation:Connects{ uuid:$uuid, name:$name }]->(to) RETURN relation`;
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processEdgeResult(result, params)); 
@@ -81,10 +81,34 @@ let updateNode = function(params) {
     });
 }
 
+let deleteNode = function(params) {
+    return new Promise(function (mainResolve, mainReject) {
+        let cypher = "Match (node:Node {uuid : $uuid}) OPTIONAL MATCH (node)-[r]-()  DELETE node,r";
+        neo4j.run(cypher, params).then(
+            result => {
+                mainResolve(result);
+            },
+            error => {mainReject(error);}
+        )
+    });
+}
+
 let updateEdge = function(params) {
     params.existinguuid = params.uuid;
     return new Promise(function (mainResolve, mainReject) {
         let cypher = "Match ()-[r]->() Where r.uuid=$existinguuid SET r={name:$name, uuid:$uuid} RETURN r";
+        neo4j.run(cypher, params).then(
+            result => {
+                mainResolve(processEdgeResult(result));
+            },
+            error => {mainReject(error);}
+        )
+    });
+}
+
+let deleteEdge = function(params) {
+    return new Promise(function (mainResolve, mainReject) {
+        let cypher = "Match ()-[r]->() Where r.uuid=$uuid DELETE r";
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processEdgeResult(result));
@@ -125,7 +149,9 @@ let graph = {
     updateNode:updateNode,
     addEdge:addEdge,
     getEdgeData:getEdgeData,
-    updateEdge:updateEdge
+    updateEdge:updateEdge,
+    deleteNode:deleteNode,
+    deleteEdge:deleteEdge,
 }
 
 module.exports = graph;

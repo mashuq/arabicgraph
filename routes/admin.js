@@ -30,6 +30,20 @@ router.post('/updateedge', function (req, res, next) {
   );
 });
 
+router.post('/deletenode', function (req, res, next) {
+  graph.deleteNode(req.body).then(
+    result => { res.send(result); },
+    error => {console.log(error);res.status(500).send(error)}
+  );
+});
+
+router.post('/deleteedge', function (req, res, next) {
+  graph.deleteEdge(req.body).then(
+    result => { res.send(result); },
+    error => {res.status(500).send(error)}
+  );
+});
+
 router.post('/getnodedata', function (req, res, next) {
   graph.getNodeData(req.body).then(
     result => { res.send(result) },
