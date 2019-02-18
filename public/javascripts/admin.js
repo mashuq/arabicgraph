@@ -1,5 +1,9 @@
-let nodeIds, nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, definition, description, example, extra;
+let nodeIds, nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, content;
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 
 $(function () {
     createGraph();
@@ -25,10 +29,7 @@ $(function () {
 });
 
 function initCKEditor() {
-    definition = CKEDITOR.replace('definition');
-    description = CKEDITOR.replace('description');
-    example = CKEDITOR.replace('example');
-    extra = CKEDITOR.replace('extra');
+    content = CKEDITOR.replace('content');
 }
 
 $("#deletenode").on("click", function () {
@@ -45,10 +46,7 @@ $("#deletenode").on("click", function () {
 
 $("#savenode").on("click", function () {
     let formData = $("#node").serializeObject();
-    formData.description = description.getData();
-    formData.example = example.getData();
-    formData.definition = definition.getData();
-    formData.extra = extra.getData();
+    formData.content = content.getData();
     if ($("input:hidden", "#node").val()) {
         $.post("/admin/updatenode", formData, function (data) {
             populateGraph();
@@ -99,10 +97,7 @@ $("#newedge").on("click", function () {
 function clearNodeForm() {
     $("#node").trigger('reset');
     $("#node input[type=hidden]").val('');
-    description.setData(null);
-    example.setData(null);
-    definition.setData(null);
-    extra.setData(null);
+    content.setData(null);
 }
 
 function clearEdgeForm() {
@@ -142,11 +137,12 @@ function preProcessNodeData(data) {
     }
     if (null != data.nodes) {
         for (let node of data.nodes) {
-            let label = node.name;
+            let label = node.name.replaceAll("\\\\n", "\n");
             node.name = node.label;
             node.label = label;
             node.id = node.uuid;
             node.shape = 'circle';
+            console.log(label);
         }
     }
     if (null != data.edges) {
@@ -216,10 +212,7 @@ function populateNodeForm(uuid) {
     $.post("/admin/getnodedata", { uuid: uuid }, function (data) {
         let node = data.nodes[0];
         $("#node input[name=name]").val(node.name);
-        description.setData(node.description);
-        example.setData(node.example);
-        definition.setData(node.definition);
-        extra.setData(node.extra);
+        content.setData(node.content);
         $("#node select[name=active]").val(node.active);
         $("#node input[name=uuid]").val(node.uuid);
         if (uuid == fromNodeUUID) {
