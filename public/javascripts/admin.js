@@ -1,9 +1,35 @@
-let nodeIds, nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID;
+let nodeIds, nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, definition, description, example, extra;
+
 
 $(function () {
     createGraph();
     populateGraph();
+    initCKEditor();
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
 });
+
+function initCKEditor() {
+    definition = CKEDITOR.replace('definition');
+    description = CKEDITOR.replace('description');
+    example = CKEDITOR.replace('example');
+    extra = CKEDITOR.replace('extra');
+}
 
 $("#deletenode").on("click", function () {
     if ($("input:hidden", "#node").val()) {
@@ -18,12 +44,17 @@ $("#deletenode").on("click", function () {
 });
 
 $("#savenode").on("click", function () {
+    let formData = $("#node").serializeObject();
+    formData.description = description.getData();
+    formData.example = example.getData();
+    formData.definition = definition.getData();
+    formData.extra = extra.getData();
     if ($("input:hidden", "#node").val()) {
-        $.post("/admin/updatenode", $("#node").serialize(), function (data) {
+        $.post("/admin/updatenode", formData, function (data) {
             populateGraph();
         });
     } else {
-        $.post("/admin/addnode", $("#node").serialize(), function (data) {
+        $.post("/admin/addnode", formData, function (data) {
             addNode(data);
         });
     }
@@ -68,6 +99,10 @@ $("#newedge").on("click", function () {
 function clearNodeForm() {
     $("#node").trigger('reset');
     $("#node input[type=hidden]").val('');
+    description.setData(null);
+    example.setData(null);
+    definition.setData(null);
+    extra.setData(null);
 }
 
 function clearEdgeForm() {
@@ -111,6 +146,7 @@ function preProcessNodeData(data) {
             node.name = node.label;
             node.label = label;
             node.id = node.uuid;
+            node.shape = 'circle';
         }
     }
     if (null != data.edges) {
@@ -180,8 +216,10 @@ function populateNodeForm(uuid) {
     $.post("/admin/getnodedata", { uuid: uuid }, function (data) {
         let node = data.nodes[0];
         $("#node input[name=name]").val(node.name);
-        $("#node textarea[name=description]").val(node.description);
-        $("#node textarea[name=example]").val(node.example);
+        description.setData(node.description);
+        example.setData(node.example);
+        definition.setData(node.definition);
+        extra.setData(node.extra);
         $("#node select[name=active]").val(node.active);
         $("#node input[name=uuid]").val(node.uuid);
         if (uuid == fromNodeUUID) {

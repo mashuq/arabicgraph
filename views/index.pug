@@ -16,11 +16,17 @@ block content
             label Node Name
             input(name="name")
           div(class="field")
+            label Definition
+            textarea(name="definition")  
+          div(class="field")
             label Description
             textarea(name="description")
           div(class="field")
             label Example
             textarea(name="example")
+          div(class="field")
+            label Extra
+            textarea(name="extra")  
           div(class="field")
             label Active
             select(name="active")
@@ -53,5 +59,6 @@ block content
     script(src='/javascripts/vis-network.min.js')
     script(src='/javascripts/jquery-3.3.1.min.js')
     script(src='/javascripts/lodash.min.js')
+    script(src='/ckeditor/ckeditor.js')
     script(src='/javascripts/admin.js')
     
