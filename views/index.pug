@@ -19,6 +19,17 @@ block content
             label Content
             textarea(name="content")         
           div(class="field")
+            label Type
+            select(name="active")
+              option(value="Discipline") Discipline
+              option(value="Topic") Topic
+              option(value="Type") Type
+              option(value="Category") Category
+              option(value="Example") Example
+              option(value="Attribute") Attribute
+              option(value="Reflection") Reflection
+              option(value="Component") Component
+          div(class="field")
             label Active
             select(name="active")
               option(value="true") True
@@ -38,7 +49,18 @@ block content
             input(name="toname")    
           div(class="field")
             label Relationship Name
-            input(name="name")            
+            input(name="name")      
+          div(class="field")
+            label Type
+            select(name="active")
+              option(value="Branches") Branches
+              option(value="Concerns") Concerns  
+              option(value="Types") Types
+              option(value="Categories") Categories
+              option(value="Examples") Examples
+              option(value="Comprises") Comprises   
+              option(value="Attributes") Atributes
+              option(value="Reflects") Reflects
           input(type="hidden" name="fromuuid")
           input(type="hidden" name="touuid")   
           input(type="hidden" name="uuid")    
