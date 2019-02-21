@@ -1,10 +1,17 @@
 var express = require('express');
 var graph = require('../api/graph');
+var passport = require('../api/passport');
 var router = express.Router();
 
 function logError(error) {
   console.log(error);
 }
+
+/* GET home page. */
+router.get('/', require('connect-ensure-login').ensureLoggedIn(), function (req, res, next) {
+  res.render('admin', { title: 'Arabic Graph Admin' });
+});
+
 
 router.post('/addnode', function (req, res, next) {
   graph.addNode(req.body).then(
@@ -21,7 +28,7 @@ router.post('/addedge', function (req, res, next) {
 });
 
 router.post('/updatenode', function (req, res, next) {
-  graph.updateNode(req.body).then( 
+  graph.updateNode(req.body).then(
     result => { res.send(result); },
     error => { logError(error); res.status(500).send(error) }
   );
@@ -68,5 +75,8 @@ router.get('/graph', function (req, res, next) {
     error => { logError(error); res.status(500).send(error) }
   );
 });
+
+
+
 
 module.exports = router;

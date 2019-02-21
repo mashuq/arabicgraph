@@ -1,0 +1,56 @@
+extends layout
+
+block header 
+  link(rel='stylesheet', href='/stylesheets/vis-network.min.css')
+  link(rel='stylesheet', href='/stylesheets/style.css')
+
+block content
+  div(class="ui huge header centered") Arabic Graph Admin Panel
+  div(class="ui container segment equal height grid stackable equal width")
+    div(class="row")
+      div(class="column")
+        div(class="ui segment", id="graph")
+          
+      div(class="column")
+        form(class="ui form segment", id="node")
+          div(class="field")
+            label Node Name
+            input(name="name")
+          div(class="field")
+            label Content
+            textarea(name="content")         
+          div(class="field")
+            label Active
+            select(name="active")
+              option(value="true") True
+              option(value="false") False
+          input(type="hidden" name="uuid")    
+          button(class="ui button primary" type="button" id="savenode") Save Node
+          button(class="ui button red" type="button" id="deletenode") Delete Node
+          button(class="ui button secondary" type="button" id="newnode") New Node
+
+
+        form(class="ui form segment" , id="edge") 
+          div(class="field")
+            label From Node
+            input(name="fromname")      
+          div(class="field")
+            label To Node
+            input(name="toname")    
+          div(class="field")
+            label Relationship Name
+            input(name="name")      
+          input(type="hidden" name="fromuuid")
+          input(type="hidden" name="touuid")   
+          input(type="hidden" name="uuid")    
+          button(class="ui button primary" type="button" id="saveedge") Save Edge 
+          button(class="ui button red" type="button" id="deleteedge") Delete Edge 
+          button(class="ui button secondary" type="button" id="newedge") New Edge
+  
+  block footer
+    script(src='/javascripts/vis-network.min.js')
+    script(src='/javascripts/jquery-3.3.1.min.js')
+    script(src='/javascripts/lodash.min.js')
+    script(src='/ckeditor/ckeditor.js')
+    script(src='/javascripts/admin.js')
+    

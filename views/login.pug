@@ -1,0 +1,19 @@
+extends layout
+
+block content
+ div(class="ui container")
+  div(class="ui two column centered grid")
+   div(class="column")
+    div(class="ui huge header") Login
+    form(action="/login" method="post" class="ui large form")
+     div(class="ui stacked segment")
+      div(class="field")
+       div(class="ui left icon input")
+        i(class="user icon")
+        input(type="text" name="username")
+       div(class="ui left icon input")
+        i(class="lock icon")
+        input(type="password" name="password")
+       div
+        input(type="submit" class="ui fluid large teal submit button" value="Login")
+       
