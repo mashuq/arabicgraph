@@ -141,7 +141,7 @@ function preProcessNodeData(data) {
             node.name = node.label;
             node.label = label;
             node.id = node.uuid;
-            node.shape = 'circle';
+            node.shape = 'dot';
             console.log(label);
         }
     }
