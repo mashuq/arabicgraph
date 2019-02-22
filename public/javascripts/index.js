@@ -37,21 +37,23 @@ function preProcessNodeData(data) {
             node.name = node.label;
             node.label = label;
             node.id = node.uuid;
-            if(_.sample([true, false])){
+            /*if(_.sample([true, false])){
                 node.color = randomColor({luminosity: 'dark'});
                 node.font = {size:25, color:'white', face:'Lateef'}
             }else{
                 node.color = randomColor({luminosity: 'light'});
                 node.font = {size:25, color:'black', face:'Lateef'}
-            }
-            node.shape = 'circle';
+            }*/
+            node.color = randomColor();
+            node.font = {color:'black', face:'Lateef'}
+            node.shape = 'dot';
         }
     }
     if (null != data.edges) {
         for (let edge of data.edges) {
             let label = edge.name;
             edge.name = edge.label;
-            edge.label = label;
+            edge.label = '';
             edge.id = edge.uuid;
             edge.font = { align: 'horizontal' };
         }
