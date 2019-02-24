@@ -15,6 +15,13 @@ router.get('/graph', function (req, res, next) {
   );
 });
 
+router.post('/partialgraph', function (req, res, next) {
+  graph.populatePartialGraph(req.body).then(
+    result => { res.send(result); },
+    error => { logError(error); res.status(500).send(error) }
+  );
+});
+
 router.get('/login',
   function (req, res) {
     res.render('login');

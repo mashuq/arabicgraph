@@ -1,14 +1,11 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
 #graph{
-  height: 900px;
+  height: 78vh;
+}
+
+body {
+  margin: 10px;
+  text-align: center;
+  background-color: #FCFCFC;
 }
 
 @import url('https://fonts.googleapis.com/css?family=Amiri|Katibeh|Lateef|Mirza|Scheherazade|Markazi+Text');

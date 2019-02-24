@@ -13,6 +13,34 @@ let identityEquals = function(objectID1, objectID2){
     return false;
 }
 
+let populatePartialGraph = function (param) {
+    return new Promise(function (mainResolve, mainReject) {
+        let combinedResult = {};
+        let combinedProcessing = function(){
+            return new Promise(function(resolve, reject) {
+                let response = processCombinedResult(combinedResult, param);
+                mainResolve(response);
+            });
+        };
+
+        neo4j.run('MATCH (n:Node {uuid : $uuid}) OPTIONAL MATCH (n)-[r*0..1]->(m) RETURN m', param).then(
+            result => {
+                combinedResult.nodeResult = result;
+                return neo4j.run('MATCH (n:Node {uuid : $uuid})-[r]->() return r', param);
+            },
+            error => {mainReject(error);}
+        ).then(
+            result => {
+                combinedResult.edgeResult = result;
+                return combinedProcessing();
+            },
+            error => {mainReject(error);}
+        );
+    });
+}
+
+
+
 let populateFullGraph = function (param) {
     return new Promise(function (mainResolve, mainReject) {
         let combinedResult = {};
@@ -142,6 +170,9 @@ let getEdgeData = function (params) {
     });
 }
 
+
+
+
 let graph = {
     populateFullGraph: populateFullGraph,
     addNode: addNode,
@@ -152,6 +183,7 @@ let graph = {
     updateEdge:updateEdge,
     deleteNode:deleteNode,
     deleteEdge:deleteEdge,
+    populatePartialGraph:populatePartialGraph
 }
 
 module.exports = graph;
