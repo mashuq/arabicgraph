@@ -10,16 +10,17 @@ block content
   div(class="ui container segment equal height grid stackable equal width")    
     div(class="row")
       div(class="column")
-        div(class="ui segment", id="graph")
-          
-      div(class="column")
-        div(class="ui segment", id="content")
+        div(class="ui segment", id="graph")         
+
+  div(class="ui modal")
+    i(class="close icon")
+    div(class="ui segment", id="content")    
   
   block footer
     script(src='/javascripts/vis-network.min.js')
     script(src='/javascripts/jquery-3.3.1.min.js')
     script(src='/javascripts/lodash.min.js')
-    script(src='/ckeditor/ckeditor.js')
     script(src='/javascripts/randomColor.js')
+    script(src='/javascripts/semantic.min.js')
     script(src='/javascripts/index.js')
     

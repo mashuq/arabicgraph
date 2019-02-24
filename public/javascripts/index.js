@@ -99,13 +99,17 @@ function createGraph() {
             network.focus(currentNodeUUID, {animation:true});
         }
     });
+
+    network.on("doubleClick", function (params) {
+        $('.ui.modal').modal('show');
+    });    
 }
 
 function populateNodeForm(uuid) {
     $("#content").html('');
     $.post("/admin/getnodedata", { uuid: uuid }, function (data) {
         let node = data.nodes[0];
-        $("#content").html(node.content);
+        $("#content").html(node.content);        
     });
 }
 
