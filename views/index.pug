@@ -3,7 +3,12 @@ extends layout
 block header 
   link(rel='stylesheet', href='/stylesheets/vis-network.min.css')
   link(rel='stylesheet', href='/stylesheets/style.css')
-  
+  script(async src='https://www.googletagmanager.com/gtag/js?id=UA-135072307-1')
+  script.
+   window.dataLayer = window.dataLayer || [];
+   function gtag(){dataLayer.push(arguments);}
+   gtag('js', new Date());
+   gtag('config', 'UA-135072307-1');
 
 block content
   h2(class="ui large header centered") 
@@ -22,11 +27,12 @@ block content
     i(class="close icon")
     div(class="ui segment", id="content")    
   
-  block footer
+  block footer    
     script(src='/javascripts/vis-network.min.js')
     script(src='/javascripts/jquery-3.3.1.min.js')
     script(src='/javascripts/lodash.min.js')
     script(src='/javascripts/randomColor.js')
     script(src='/javascripts/semantic.min.js')
     script(src='/javascripts/index.js')
+    
     
