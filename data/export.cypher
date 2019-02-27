@@ -73,6 +73,14 @@ CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", 
 CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"جَمْعٌ\\n(Jame)\\nPlural", `size`:"25", `uuid`:"96d9fb1e-2f0b-49b8-afe2-a12df2c3fd7c", `UNIQUE IMPORT ID`:81});
 CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"عَاقِل\\n(Aqel)\\nWith Intellect", `size`:"25", `uuid`:"674720a4-005e-43ac-a5f5-e6c29833973d", `UNIQUE IMPORT ID`:82});
 CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"غَير عَاقِل\\(Gayr Aqel)\\nWithout Intellect", `size`:"25", `uuid`:"3fa0b062-dd79-40f3-9f27-3d3b1dfc90bc", `UNIQUE IMPORT ID`:83});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"Classification According to Parts of Speech", `size`:"25", `uuid`:"e3167942-4027-4784-8b9f-8fc38fd245b3", `UNIQUE IMPORT ID`:84});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"اسم العلم\\n(Ismul Alam)\\nProper Noun", `size`:"25", `uuid`:"79df514b-2091-40d8-a217-96c2d0807a18", `UNIQUE IMPORT ID`:85});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"ضمير\\n(Damir)\\nPersonal Pronoun", `size`:"25", `uuid`:"e3aa36ad-f0dd-4c2d-a591-618fca043576", `UNIQUE IMPORT ID`:86});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"اسم اشارة\\n(Ismul ishara)\\nDemonstrative Pronoun", `size`:"25", `uuid`:"64c0f62e-79b4-41be-9c80-744a26715ae9", `UNIQUE IMPORT ID`:87});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"اسم موصول\\n(Ism Mousul)\\nRelative Pronoun", `size`:"25", `uuid`:"772f8c17-2331-4404-9400-1381ec058dbf", `UNIQUE IMPORT ID`:88});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"صفة\\n(Sifat)\\nAdjective", `size`:"25", `uuid`:"5294b57a-de3d-4f36-828a-392bbd2ac443", `UNIQUE IMPORT ID`:89});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"ظرف زمان\\n(Jarf Jamaan)\\nAdverb of Time", `size`:"25", `uuid`:"23d6af0f-65d3-44f4-ab7d-15affe0516be", `UNIQUE IMPORT ID`:90});
+CREATE (:`Node`:`UNIQUE IMPORT LABEL` {`active`:"true", `content`:"<p>.</p>\n", `name`:"ظرف مكان\\n(Jarf Maqan)\\nAdverb of Place", `size`:"25", `uuid`:"b9d82c70-8cec-4566-a24b-3ee546848927", `UNIQUE IMPORT ID`:91});
 :commit
 :begin
 CREATE CONSTRAINT ON (node:`UNIQUE IMPORT LABEL`) ASSERT (node.`UNIQUE IMPORT ID`) IS UNIQUE;
@@ -151,6 +159,14 @@ MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:69}), (n2:`UNIQUE IMPORT LABE
 MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:69}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:80}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"6c3c24c8-2148-471b-8e7d-0236f73d4d89", `width`:"2"}]->(n2);
 MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:71}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:82}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"59a5473f-5d67-40a8-b906-c7c4764a0810", `width`:"2"}]->(n2);
 MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:71}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:83}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"b243d786-bd69-4ea8-bf3a-682085796b80", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:3}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"dab8e093-0e5d-47d3-a773-1520310b5167", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:86}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"cd306a4d-788a-4ab7-afdd-9c06027c7bad", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:85}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"d876abc2-828e-40ed-ab6e-9ae279cc6084", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:87}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"ba5a6d28-ecb4-44cc-9286-871efcb4f62f", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:90}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"75ef725a-7771-4e1a-a31f-d423fd30b3d7", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:88}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"0e8f0ac9-2280-4940-a0c0-6de2b0102c10", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:89}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"04d6e289-09e8-4734-8af9-512998ff53ad", `width`:"2"}]->(n2);
+MATCH (n1:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:84}), (n2:`UNIQUE IMPORT LABEL`{`UNIQUE IMPORT ID`:91}) CREATE (n1)-[r:`Connects` {`length`:"150", `name`:"Classification", `uuid`:"a9cfd7e4-ff7b-44ce-9702-a3153542b600", `width`:"2"}]->(n2);
 :commit
 :begin
 MATCH (n:`UNIQUE IMPORT LABEL`)  WITH n LIMIT 20000 REMOVE n:`UNIQUE IMPORT LABEL` REMOVE n.`UNIQUE IMPORT ID`;
