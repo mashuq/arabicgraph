@@ -70,7 +70,7 @@ let populateFullGraph = function (param) {
 let addNode = function (params) {
     params.uuid = uuidv4();
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = "Create (node:Node{name:$name, content:$content, uuid : $uuid, active:$active}) return node";
+        let cypher = "Create (node:Node{name:$name, content:$content, uuid : $uuid, active:$active, size:$size}) return node";
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processNodeResult(result));
@@ -83,7 +83,7 @@ let addNode = function (params) {
 let addEdge = function (params) {
     params.uuid = uuidv4();
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = `Match (from:Node {uuid : $fromuuid}), (to:Node {uuid : $touuid}) CREATE (from)-[relation:Connects{ uuid:$uuid, name:$name }]->(to) RETURN relation`;
+        let cypher = `Match (from:Node {uuid : $fromuuid}), (to:Node {uuid : $touuid}) CREATE (from)-[relation:Connects{ uuid:$uuid, name:$name, width:$width, length:$length }]->(to) RETURN relation`;
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processEdgeResult(result, params)); 
@@ -99,7 +99,7 @@ let addEdge = function (params) {
 let updateNode = function(params) {
     params.existinguuid = params.uuid;
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = "Match (node:Node {uuid : $existinguuid}) SET node={name:$name, content:$content, uuid : $uuid, active:$active} return node";
+        let cypher = "Match (node:Node {uuid : $existinguuid}) SET node={name:$name, content:$content, uuid : $uuid, active:$active, size:$size} return node";
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processNodeResult(result));
@@ -124,7 +124,7 @@ let deleteNode = function(params) {
 let updateEdge = function(params) {
     params.existinguuid = params.uuid;
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = "Match ()-[r]->() Where r.uuid=$existinguuid SET r={name:$name, uuid:$uuid} RETURN r";
+        let cypher = "Match ()-[r]->() Where r.uuid=$existinguuid SET r={name:$name, uuid:$uuid, width:$width, length:$length} RETURN r";
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processEdgeResult(result));

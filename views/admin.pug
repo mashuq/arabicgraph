@@ -9,7 +9,7 @@ block content
   div(class="ui container segment equal height grid stackable equal width")
     div(class="row")
       div(class="column")
-        div(class="ui segment", id="graph")
+        div(class="ui segment", id="graph" style="height:1500px;")
           
       div(class="column")
         form(class="ui form segment", id="node")
@@ -24,6 +24,23 @@ block content
             select(name="active")
               option(value="true") True
               option(value="false") False
+          div(class="field")
+            label Size
+            select(name="size")
+              option(value="5") 5
+              option(value="10") 10
+              option(value="15") 15
+              option(value="20") 20
+              option(value="25") 25
+              option(value="30") 30
+              option(value="35") 35
+              option(value="40") 40
+              option(value="45") 45
+              option(value="50") 50
+              option(value="55") 55
+              option(value="60") 60
+              option(value="65") 65
+              option(value="70") 70
           input(type="hidden" name="uuid")    
           button(class="ui button primary" type="button" id="savenode") Save Node
           button(class="ui button red" type="button" id="deletenode") Delete Node
@@ -40,6 +57,32 @@ block content
           div(class="field")
             label Relationship Name
             input(name="name")      
+          div(class="field")
+            label Length
+            select(name="length")
+              option(value="50") 50
+              option(value="100") 100
+              option(value="150") 150
+              option(value="200") 200
+              option(value="250") 250
+              option(value="300") 300
+              option(value="350") 350
+              option(value="400") 400
+              option(value="450") 450
+              option(value="500") 500  
+          div(class="field")
+            label Width
+            select(name="width")
+              option(value="1") 1
+              option(value="2") 2
+              option(value="3") 3
+              option(value="4") 4
+              option(value="5") 5
+              option(value="6") 6
+              option(value="7") 7
+              option(value="8") 8
+              option(value="9") 9
+              option(value="10") 10                 
           input(type="hidden" name="fromuuid")
           input(type="hidden" name="touuid")   
           input(type="hidden" name="uuid")    

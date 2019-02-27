@@ -59,15 +59,16 @@ function preProcessNodeData(data) {
         data.nodes = dataNodes;        
 
         for (let node of data.nodes) {
-            let color = randomColor();
+            let color = randomColor({
+                luminosity: 'dark'
+             });
             let label = node.name.replaceAll("\\\\n", "\n");
             node.name = node.label;
-            node.label = label;
+            node.label = label; 
             node.id = node.uuid;
-            node.color = {background:color, border:color, highlight:{background:'#C8C8C8', border: '#C8C8C8'}};
-            node.font = {color:'black', face:'Lateef'}
+            node.color = {background:color, border:color, highlight:{background:'#C8C8C8', border: '#696969'}};
+            node.font = {color:'black', face:'Lateef', size: 25}
             node.shape = 'dot';
-            node.size = 35;
             node.mass = 3;
             nodeIds.push(node.uuid);
         }
@@ -81,7 +82,7 @@ function preProcessNodeData(data) {
         for (let edge of data.edges) {
             let label = edge.name;
             edge.name = edge.label;
-            edge.label = '';
+            edge.label = label;
             edge.id = edge.uuid;
             edge.font = { align: 'horizontal' };
             edgeIds.push(edge.uuid);
