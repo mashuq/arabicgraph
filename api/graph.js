@@ -70,7 +70,7 @@ let populateFullGraph = function (param) {
 let addNode = function (params) {
     params.uuid = uuidv4();
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = "Create (node:Node{name:$name, content:$content, uuid : $uuid, active:$active, size:$size}) return node";
+        let cypher = "Create (node:Node{name:$name, content:$content, uuid : $uuid, active:$active, size:$size, shape:$shape}) return node";
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processNodeResult(result));
@@ -99,7 +99,7 @@ let addEdge = function (params) {
 let updateNode = function(params) {
     params.existinguuid = params.uuid;
     return new Promise(function (mainResolve, mainReject) {
-        let cypher = "Match (node:Node {uuid : $existinguuid}) SET node={name:$name, content:$content, uuid : $uuid, active:$active, size:$size} return node";
+        let cypher = "Match (node:Node {uuid : $existinguuid}) SET node={name:$name, content:$content, uuid : $uuid, active:$active, size:$size, shape:$shape} return node";
         neo4j.run(cypher, params).then(
             result => {
                 mainResolve(processNodeResult(result));

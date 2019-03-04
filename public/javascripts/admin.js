@@ -141,7 +141,6 @@ function preProcessNodeData(data) {
             node.name = node.label;
             node.label = label;
             node.id = node.uuid;
-            node.shape = 'dot';
         }
     }
     if (null != data.edges) {
@@ -214,6 +213,7 @@ function populateNodeForm(uuid) {
         content.setData(node.content);
         $("#node select[name=active]").val(node.active);
         $("#node select[name=size]").val(node.size);
+        $("#node select[name=shape]").val(node.shape);
         $("#node input[name=uuid]").val(node.uuid);
         if (uuid == fromNodeUUID) {
             $("#edge input[name=fromname]").val(node.name);

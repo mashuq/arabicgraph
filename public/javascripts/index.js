@@ -68,7 +68,6 @@ function preProcessNodeData(data) {
             node.id = node.uuid;
             node.color = {background:color, border:color, highlight:{background:'#C8C8C8', border: '#696969'}};
             node.font = {color:'black', face:'Lateef', size: 25}
-            node.shape = 'dot';
             node.mass = 3;
             nodeIds.push(node.uuid);
         }
