@@ -23,10 +23,10 @@ let populatePartialGraph = function (param) {
             });
         };
 
-        neo4j.run('MATCH (n:Node {uuid : $uuid}) OPTIONAL MATCH (n)-[r*0..1]->(m) RETURN m', param).then(
+        neo4j.run('MATCH (n:Node {uuid : $uuid}) OPTIONAL MATCH (n)-[r*0..1]-(m) RETURN m', param).then(
             result => {
                 combinedResult.nodeResult = result;
-                return neo4j.run('MATCH (n:Node {uuid : $uuid})-[r]->() return r', param);
+                return neo4j.run('MATCH (n:Node {uuid : $uuid})-[r]-() return r', param);
             },
             error => {mainReject(error);}
         ).then(
