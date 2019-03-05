@@ -14,13 +14,26 @@ block content
   h2(class="ui large header centered") 
     img(class="ui image" src="/images/graph.png")
     span Arabic Graph
-  div(class="ui positive message")
+  div(class="ui info message")
    i(class="close icon")
-   div(class="header") Click to explore, Double Click to see details
-  div(class="ui negative message")
-   i(class="close icon")
-   div(class="header") Information in this site is still work in progress. Please use at your own risk. 
-
+   div(class="header") Click to explore, Double Click to see details. Information in this site is still work in progress. Please use at your own risk. 
+  .ui.form
+   .inline.fields
+    label(for='view') Select your view:
+    .field
+      .ui.radio.checkbox
+        input.hidden(type='radio', name='view', tabindex='0', value="full")
+        label Full
+    .field
+      .ui.radio.checkbox
+        input.hidden(type='radio', name='view', checked='true', tabindex='0', value="incremental")
+        label Incremental
+    .field
+      .ui.radio.checkbox
+        input.hidden(type='radio', name='view', tabindex='0', value="single")
+        label Single node at a time
+  
+  
   div(class="ui segment", id="graph")         
 
   div(class="ui modal")
