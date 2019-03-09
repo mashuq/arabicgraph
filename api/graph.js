@@ -114,7 +114,7 @@ let deleteNode = function(params) {
         let cypher = "Match (node:Node {uuid : $uuid}) OPTIONAL MATCH (node)-[r]-()  DELETE node,r";
         neo4j.run(cypher, params).then(
             result => {
-                mainResolve(result);
+                mainResolve(params);
             },
             error => {mainReject(error);}
         )
@@ -139,7 +139,7 @@ let deleteEdge = function(params) {
         let cypher = "Match ()-[r]->() Where r.uuid=$uuid DELETE r";
         neo4j.run(cypher, params).then(
             result => {
-                mainResolve(processEdgeResult(result));
+                mainResolve(params);
             },
             error => {mainReject(error);}
         )

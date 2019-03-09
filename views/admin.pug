@@ -13,6 +13,21 @@ block content
           
       div(class="column")
         form(class="ui form segment", id="node")
+          .inline.fields
+           label(for='view') Select your view:
+           .field
+             .ui.radio.checkbox
+               input.hidden(type='radio', name='view', tabindex='0', value="full")
+               label Full
+           .field
+             .ui.radio.checkbox
+               input.hidden(type='radio', name='view', checked='true', tabindex='0', value="incremental")
+               label Incremental
+           .field
+             .ui.radio.checkbox
+               input.hidden(type='radio', name='view', tabindex='0', value="single")
+               label Single node at a time
+
           div(class="field")
             label Node Name
             input(name="name")
@@ -109,5 +124,6 @@ block content
     script(src='/javascripts/jquery-3.3.1.min.js')
     script(src='/javascripts/lodash.min.js')
     script(src='/ckeditor/ckeditor.js')
+    script(src='/javascripts/semantic.min.js')
     script(src='/javascripts/admin.js')
     

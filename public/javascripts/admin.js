@@ -1,14 +1,21 @@
-let nodeIds, nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, content;
+let nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, content;
+let view = 'incremental';
+let nodeIds = [];
+let edgeIds = [];
+const rootUUID = "19257b55-210b-46ea-aea3-87f24d2faf60";
+let currentNodeUUID = rootUUID;
 
-String.prototype.replaceAll = function(search, replacement) {
+String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
 $(function () {
     createGraph();
-    populateGraph();
+    populatePartialGraph(rootUUID);
     initCKEditor();
+    $('.ui.radio.checkbox').checkbox();
+    $('input[type=radio][name=view]').val(['incremental']);
 
     $.fn.serializeObject = function () {
         var o = {};
@@ -32,12 +39,66 @@ function initCKEditor() {
     content = CKEDITOR.replace('content');
 }
 
+function populatePartialGraph(uuid) {
+    $.post("/partialgraph", { uuid: uuid }, function (data) {
+        addNodeAndEdge(data);
+    });
+}
+
+function addNodeAndEdge(data) {
+    preProcessNodeData(data);
+    data.nodes.forEach(function (element) {
+        nodes.add(element);
+    });
+    data.edges.forEach(function (element) {
+        edges.add(element);
+    });
+}
+
+$('input[type=radio][name=view]').change(function () {
+    view = this.value;
+    if (view == 'full') {
+        populateGraph();
+    } else if (view == 'incremental' || view == 'single') {
+        clearNetwork();
+        populatePartialGraph(rootUUID);
+    }
+});
+
+function clearNetwork() {
+    nodeIds.length = 0;
+    edgeIds.length = 0;
+    nodes.clear();
+    edges.clear();
+}
+
+function clearPartialNetwork(nodeId) {
+    nodeIds.splice(nodeIds.indexOf(nodeId), 1);
+    nodes.remove(nodeIds);
+    nodeIds.length = 0;
+    nodeIds.push(nodeId);
+
+    edgeIds.length = 0;
+    edges.clear();
+}
+
+function removeNode(nodeId) {
+    nodeIds.splice(nodeIds.indexOf(nodeId), 1);
+    nodes.remove([nodeId]);
+}
+
+function removeEdge(edgeId) {
+    edgeIds.splice(edgeIds.indexOf(edgeId), 1);
+    edges.remove([edgeId]);
+}
+
 $("#deletenode").on("click", function () {
     if ($("input:hidden", "#node").val()) {
         let result = confirm("Are you sure?");
         if (result) {
-            $.post("/admin/deletenode", $("#node").serialize(), function (data) {
-                populateGraph();
+            let param = $("#node").serialize(); 
+            $.post("/admin/deletenode", param, function (data) {                
+                removeNode(data.uuid);
             });
         }
     }
@@ -49,7 +110,8 @@ $("#savenode").on("click", function () {
     formData.content = content.getData();
     if ($("input:hidden", "#node").val()) {
         $.post("/admin/updatenode", formData, function (data) {
-            populateGraph();
+            removeNode(data.nodes[0].uuid);
+            addNode(data);
         });
     } else {
         $.post("/admin/addnode", formData, function (data) {
@@ -62,7 +124,11 @@ $("#savenode").on("click", function () {
 $("#saveedge").on("click", function () {
     if ($("input:hidden[name=uuid]", "#edge").val()) {
         $.post("/admin/updateedge", $("#edge").serialize(), function (data) {
-            populateGraph();
+            let existingEdge = edges.get(data.edges[0].uuid);
+            data.edges[0].from = existingEdge.from;
+            data.edges[0].to = existingEdge.to;
+            removeEdge(data.edges[0].uuid);
+            addEdge(data);
         });
     } else {
         $.post("/admin/addedge", $("#edge").serialize(), function (data) {
@@ -76,8 +142,9 @@ $("#deleteedge").on("click", function () {
     if ($("input:hidden[name=uuid]", "#edge").val()) {
         let result = confirm("Are you sure?");
         if (result) {
-            $.post("/admin/deleteedge", $("#edge").serialize(), function (data) {
-                populateGraph();
+            let param =  $("#edge").serialize();
+            $.post("/admin/deleteedge",param, function (data) {
+                removeEdge(data.uuid);
             });
         }
     }
@@ -136,20 +203,31 @@ function preProcessNodeData(data) {
         return;
     }
     if (null != data.nodes) {
+        let dataNodes = data.nodes.filter(function (value, index, arr) {
+            return !nodeIds.includes(value.uuid);
+        });
+        data.nodes = dataNodes;
         for (let node of data.nodes) {
             let label = node.name.replaceAll("\\\\n", "\n");
             node.name = node.label;
             node.label = label;
             node.id = node.uuid;
+            nodeIds.push(node.uuid);
         }
     }
     if (null != data.edges) {
+        let dataEdges = data.edges.filter(function (value, index, arr) {
+            return !edgeIds.includes(value.uuid);
+        });
+        data.edges = dataEdges;
+
         for (let edge of data.edges) {
             let label = edge.name;
             edge.name = edge.label;
             edge.label = label;
             edge.id = edge.uuid;
             edge.font = { align: 'horizontal' };
+            edgeIds.push(edge.uuid);
         }
     }
 }
@@ -188,20 +266,32 @@ function createGraph() {
     });
     network.on("click", function (params) {
         if (this.getSelectedNodes()) {
-            let currentNodeUUID = this.getSelectedNodes()[0];
-            if (null == fromNodeUUID && null == toNodeUUID) {
-                fromNodeUUID = currentNodeUUID;
-            } else if (null != fromNodeUUID && null == toNodeUUID) {
-                toNodeUUID = currentNodeUUID;
-            } else {
-                fromNodeUUID = toNodeUUID;
-                toNodeUUID = currentNodeUUID;
+            currentNodeUUID = this.getSelectedNodes()[0];
+            if (currentNodeUUID) {
+                if (null == fromNodeUUID && null == toNodeUUID) {
+                    fromNodeUUID = currentNodeUUID;
+                } else if (null != fromNodeUUID && null == toNodeUUID) {
+                    toNodeUUID = currentNodeUUID;
+                } else {
+                    fromNodeUUID = toNodeUUID;
+                    toNodeUUID = currentNodeUUID;
+                }
+                populateNodeForm(currentNodeUUID);
+
+                network.focus(currentNodeUUID, { animation: true });
+                if (view == 'single') {
+                    clearPartialNetwork(currentNodeUUID);
+                }
+                if (view == 'single' || view == 'incremental') {
+                    populatePartialGraph(currentNodeUUID);
+                }
             }
-            populateNodeForm(currentNodeUUID);
         }
         if (this.getSelectedEdges()) {
             let currentEdgeUUID = this.getSelectedEdges()[0];
-            populateEdgeForm(currentEdgeUUID);
+            if (currentEdgeUUID) {
+                populateEdgeForm(currentEdgeUUID);
+            }
         }
     });
 }
