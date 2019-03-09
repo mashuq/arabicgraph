@@ -172,7 +172,7 @@ function createGraph() {
 
     network.on("doubleClick", function (params) {
         if(currentNodeUUID){
-            $('.ui.modal').modal('show');
+            $('.ui.longer.modal').modal('show');
         }
     });
 }
