@@ -43,6 +43,9 @@ function populatePartialGraph(uuid) {
     $.post("/partialgraph", { uuid: uuid }, function (data) {
         addNodeAndEdge(data);
     });
+    $.get("/admin/disconnectednodes", function (data) {
+        addNodeAndEdge(data);
+    });
 }
 
 function addNodeAndEdge(data) {

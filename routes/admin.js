@@ -76,6 +76,13 @@ router.get('/graph', function (req, res, next) {
   );
 });
 
+router.get('/disconnectednodes', function (req, res, next) {
+  graph.disconnectedNodes().then(
+    result => { res.send(result); },
+    error => { logError(error); res.status(500).send(error) }
+  );
+});
+
 
 
 

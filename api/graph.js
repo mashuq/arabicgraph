@@ -67,6 +67,18 @@ let populateFullGraph = function (param) {
     });
 }
 
+let disconnectedNodes = function (params) {
+    return new Promise(function (mainResolve, mainReject) {
+        let cypher = "MATCH (n:Node) WHERE NOT (n)--() RETURN n";
+        neo4j.run(cypher, params).then(
+            result => {
+                mainResolve(processNodeResult(result));
+            },
+            error => {mainReject(error);}
+        )
+    });
+}
+
 let addNode = function (params) {
     params.uuid = uuidv4();
     return new Promise(function (mainResolve, mainReject) {
@@ -183,7 +195,8 @@ let graph = {
     updateEdge:updateEdge,
     deleteNode:deleteNode,
     deleteEdge:deleteEdge,
-    populatePartialGraph:populatePartialGraph
+    populatePartialGraph:populatePartialGraph,
+    disconnectedNodes:disconnectedNodes
 }
 
 module.exports = graph;
