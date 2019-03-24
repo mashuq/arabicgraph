@@ -33,7 +33,11 @@ block content
       .ui.radio.checkbox
         input.hidden(type='radio', name='view', tabindex='0', value="single")
         label Single node at a time
-  
+  .ui.search
+   .ui.icon.input.fluid.focus
+    input(class="prompt" type="text" placeholder="Search ...")
+    i.search.icon
+   .results  
   
   div(class="ui segment", id="graph")         
 

@@ -46,8 +46,12 @@ let populateFullGraph = function (param) {
         let combinedResult = {};
         let combinedProcessing = function(){
             return new Promise(function(resolve, reject) {
-                let response = processCombinedResult(combinedResult, param);
-                mainResolve(response);
+                try{
+                    let response = processCombinedResult(combinedResult, param);
+                    mainResolve(response);
+                }catch(error){
+                    mainReject(error);
+                }
             });
         };
 
@@ -235,8 +239,8 @@ function processCombinedResult(combinedResult, param) {
     for (let record of combinedResult.nodeResult.records) {
         let nodeRecord = record._fields[0];
         let node = {};
-        node.label = nodeRecord.labels[0];
         Object.assign(node, nodeRecord.properties);
+        delete node.content;
         response.nodes.push(node);
     }
     for (let record of combinedResult.edgeResult.records) {

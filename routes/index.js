@@ -39,4 +39,8 @@ router.get('/logout',
     res.redirect('/');
 });
 
+function logError(error) {
+  console.log(error);
+}
+
 module.exports = router;

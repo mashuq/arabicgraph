@@ -1,5 +1,5 @@
-let nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, content, view = 'incremental';
-
+const incremental = 'incremental', single = 'single', full = 'full';
+let nodesArray, nodes, edgesArray, edges, network, fromNodeUUID, toNodeUUID, content, view = incremental, searchContent = [];
 let nodeIds = [];
 let edgeIds = [];
 const rootUUID = "19257b55-210b-46ea-aea3-87f24d2faf60";
@@ -12,17 +12,40 @@ String.prototype.replaceAll = function (search, replacement) {
 
 $(function () {
     createGraph();
-    if(null !== location.hash){
+    if (null !== location.hash) {
         currentNodeUUID = location.hash.substr(1);
-        if(!currentNodeUUID)currentNodeUUID = rootUUID;
-    }else{
+        if (!currentNodeUUID) currentNodeUUID = rootUUID;
+    } else {
         currentNodeUUID = rootUUID;
     }
-    window.history.replaceState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);    
+    window.history.replaceState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);
     load(currentNodeUUID);
+    loadSearch();
     $('.ui.radio.checkbox').checkbox();
-    $('input[type=radio][name=view]').val(['incremental']);
+    $('input[type=radio][name=view]').val([incremental]);
 });
+
+function loadSearch() {
+    $.get("/graph", function (data) {
+        searchContent = data.nodes.map(obj => ({ title: obj.name.replaceAll("\\\\n", "<br /> "), id: obj.uuid }));
+        $('.ui.search').search({
+            source: searchContent,
+            onSelect: function (result, response) {
+                if (result.id) {
+                    $('input[type=radio][name=view]').val([single]);
+                    currentNodeUUID = result.id;
+                    window.history.pushState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);
+                    clearNetwork();
+                    view = incremental;
+                    load(currentNodeUUID);
+                    view = single;                    
+                }
+            }
+        });
+    });
+}
+
+
 
 window.onpopstate = function (event) {
     if (event.state) { state = event.state; }
@@ -31,9 +54,9 @@ window.onpopstate = function (event) {
 
 $('input[type=radio][name=view]').change(function () {
     view = this.value;
-    if (view == 'full') {
+    if (view == full) {
         populateGraph();
-    } else if (view == 'incremental' || view == 'single') {
+    } else if (view == incremental || view == single) {
         clearNetwork();
         populatePartialGraph(rootUUID);
     }
@@ -59,6 +82,7 @@ function clearPartialNetwork(nodeId) {
 function populatePartialGraph(uuid) {
     $.post("/partialgraph", { uuid: uuid }, function (data) {
         addNodeAndEdge(data);
+        network.selectNodes([uuid], false);
     });
 }
 
@@ -169,7 +193,7 @@ function createGraph() {
             }
             currentNodeUUID = this.getSelectedNodes()[0];
             if (currentNodeUUID) {
-                window.history.pushState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);                
+                window.history.pushState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);
                 load(currentNodeUUID);
             }
         }
@@ -186,15 +210,15 @@ function createGraph() {
     });
 }
 
-function load(currentNodeUUID) {
+function load(currentNodeUUID) {    
     populateNodeForm(currentNodeUUID);
     network.focus(currentNodeUUID, { animation: true });
-    if (view == 'single') {
+    if (view == single) {
         clearPartialNetwork(currentNodeUUID);
     }
-    if (view == 'single' || view == 'incremental') {
+    if (view == single || view == incremental) {
         populatePartialGraph(currentNodeUUID);
-    }
+    }    
 }
 
 function populateNodeForm(uuid) {
@@ -202,10 +226,10 @@ function populateNodeForm(uuid) {
     $.post("/admin/getnodedata", { uuid: uuid }, function (data) {
         let node = data.nodes[0];
         let title = node.name.replaceAll("\\\\n", " ");
-        document.title = "Arabic Graph: "+ title;
+        document.title = "Arabic Graph: " + title;
         let path = location.pathname + location.search + location.hash;
         gtag('config', gaid, {
-            'page_title' : title,
+            'page_title': title,
             'page_path': path,
         });
         $("#content").html(node.content);
