@@ -101,7 +101,6 @@ let addEdge = function (params) {
                 mainResolve(processEdgeResult(result, params)); 
             },
             error => {
-                console.log(error);
                 mainReject(error);
             }
         )

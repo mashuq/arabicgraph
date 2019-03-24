@@ -12,10 +12,22 @@ String.prototype.replaceAll = function (search, replacement) {
 
 $(function () {
     createGraph();
-    populatePartialGraph(rootUUID);
+    if(null !== location.hash){
+        currentNodeUUID = location.hash.substr(1);
+        if(!currentNodeUUID)currentNodeUUID = rootUUID;
+    }else{
+        currentNodeUUID = rootUUID;
+    }
+    window.history.replaceState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);    
+    load(currentNodeUUID);
     $('.ui.radio.checkbox').checkbox();
     $('input[type=radio][name=view]').val(['incremental']);
 });
+
+window.onpopstate = function (event) {
+    if (event.state) { state = event.state; }
+    load(state.id);
+};
 
 $('input[type=radio][name=view]').change(function () {
     view = this.value;
@@ -152,16 +164,13 @@ function createGraph() {
     });
     network.on("click", function (params) {
         if (this.getSelectedNodes()) {
+            if (this.getSelectedNodes()[0] === currentNodeUUID) {
+                return;
+            }
             currentNodeUUID = this.getSelectedNodes()[0];
             if (currentNodeUUID) {
-                populateNodeForm(currentNodeUUID);
-                network.focus(currentNodeUUID, { animation: true });
-                if (view == 'single') {
-                    clearPartialNetwork(currentNodeUUID);
-                }
-                if (view == 'single' || view == 'incremental') {
-                    populatePartialGraph(currentNodeUUID);
-                }
+                window.history.pushState({ id: currentNodeUUID }, null, `#${currentNodeUUID}`);                
+                load(currentNodeUUID);
             }
         }
     });
@@ -171,16 +180,34 @@ function createGraph() {
     });
 
     network.on("doubleClick", function (params) {
-        if(currentNodeUUID){
-            $('.ui.longer.modal').modal('show');
+        if (currentNodeUUID) {
+            $('.ui.modal').modal('show');
         }
     });
+}
+
+function load(currentNodeUUID) {
+    populateNodeForm(currentNodeUUID);
+    network.focus(currentNodeUUID, { animation: true });
+    if (view == 'single') {
+        clearPartialNetwork(currentNodeUUID);
+    }
+    if (view == 'single' || view == 'incremental') {
+        populatePartialGraph(currentNodeUUID);
+    }
 }
 
 function populateNodeForm(uuid) {
     $("#content").html('');
     $.post("/admin/getnodedata", { uuid: uuid }, function (data) {
         let node = data.nodes[0];
+        let title = node.name.replaceAll("\\\\n", " ");
+        document.title = "Arabic Graph: "+ title;
+        let path = location.pathname + location.search + location.hash;
+        gtag('config', gaid, {
+            'page_title' : title,
+            'page_path': path,
+        });
         $("#content").html(node.content);
     });
 }

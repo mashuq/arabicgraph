@@ -5,10 +5,11 @@ block header
   link(rel='stylesheet', href='/stylesheets/style.css')
   script(async src='https://www.googletagmanager.com/gtag/js?id=UA-135072307-1')
   script.
+   var gaid = 'UA-135072307-1';
    window.dataLayer = window.dataLayer || [];
    function gtag(){dataLayer.push(arguments);}
    gtag('js', new Date());
-   gtag('config', 'UA-135072307-1');
+   gtag('config', gaid);
 
 block content
   h2(class="ui large header centered") 
