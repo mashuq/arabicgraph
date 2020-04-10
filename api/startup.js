@@ -1,14 +1,16 @@
-var neo4j = require('../config/neo4j');
+var driver = require('../config/neo4j');
 const rootUUID = "19257b55-210b-46ea-aea3-87f24d2faf60";
 const root = "Root";
 var app = require('express')();
 
 
 let getNode = function(){
+    let neo4j = driver.session({defaultAccessMode: driver.session.WRITE})  
     return neo4j.run('Match (root:Node {uuid : $uuid}) RETURN root', { uuid: rootUUID });
 }
 
 let createNode = function(){
+    let neo4j = driver.session({defaultAccessMode: driver.session.WRITE})  
     return neo4j.run('Create (root:Node {uuid : $uuid, name : $name, acive:$active}) RETURN root', 
     { uuid: rootUUID, name: root, active : true });
 }

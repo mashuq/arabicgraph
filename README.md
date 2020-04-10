@@ -1,0 +1,1 @@
+cat export.cypher | /bin/cypher-shell -u neo4j -p neo5j
